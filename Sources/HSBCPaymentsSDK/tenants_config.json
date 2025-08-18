@@ -1,0 +1,19 @@
+{
+  "HSBC_HK": {
+    "tenantId": "hsbc_hk",
+    "releaseConfigTemplateUrl": "https://%@api.dms.gbm.hsbc.com/hyper/bundles/in.juspay.merchants/%@/ios/%@/release-config.json?toss=%d",
+    "logsEndPoints": null
+  },  "HSBC_IN": {
+    "tenantId": "hsbc_in",
+    "releaseConfigTemplateUrl": "https://%@api.dms.gbm.hsbc.com/in/hyper/bundles/in.juspay.merchants/%@/ios/%@/release-config.json?toss=%d",
+    "logsEndPoints": null
+  },  "HSBC_SG": {
+    "tenantId": "hsbc_sg",
+    "releaseConfigTemplateUrl": "https://%@api.dms.gbm.hsbc.com/sg/hyper/bundles/in.juspay.merchants/%@/ios/%@/release-config.json?toss=%d",
+    "logsEndPoints": null
+  },  "DEFAULT": {
+    "tenantId": "hsbc_hk",
+    "releaseConfigTemplateUrl": "https://%@api.dms.gbm.hsbc.com/hyper/bundles/in.juspay.merchants/%@/ios/%@/release-config.json?toss=%d",
+    "logsEndPoints": null
+  }
+}
