@@ -13,74 +13,25 @@ static NSMutableDictionary<NSString *, HSBCPaymentsTenantMap *> *_tenantRegistry
 }
 
 + (void)registerDefaultTenants {
-    // Try to load from JSON first, fallback to hardcoded if fails
-    if (![self registerTenantsFromJSONFile:@"tenants_config"]) {
-        // register with some default config
-    }
+    // Register tenants directly from hardcoded configuration
+    [self registerTenantWithName:@"hsbc_hk"
+                        tenantId:@"hsbc_hk"
+        releaseConfigTemplateUrl:@"https://%@api.dms.gbm.hsbc.com/hyper/bundles/in.juspay.merchants/%@/ios/%@/release-config.json?toss=%d"
+                   logsEndPoints:nil];
+    [self registerTenantWithName:@"hsbc_in"
+                        tenantId:@"hsbc_in"
+        releaseConfigTemplateUrl:@"https://%@api.dms.gbm.hsbc.com/in/hyper/bundles/in.juspay.merchants/%@/ios/%@/release-config.json?toss=%d"
+                   logsEndPoints:nil];
+    [self registerTenantWithName:@"hsbc_sg"
+                        tenantId:@"hsbc_sg"
+        releaseConfigTemplateUrl:@"https://%@api.dms.gbm.hsbc.com/sg/hyper/bundles/in.juspay.merchants/%@/ios/%@/release-config.json?toss=%d"
+                   logsEndPoints:nil];
+    [self registerTenantWithName:@"DEFAULT"
+                        tenantId:@"hsbc_hk"
+        releaseConfigTemplateUrl:@"https://%@api.dms.gbm.hsbc.com/hyper/bundles/in.juspay.merchants/%@/ios/%@/release-config.json?toss=%d"
+                   logsEndPoints:nil];
 }
 
-+ (BOOL)registerTenantsFromJSONFile:(NSString *)fileName {
-    NSString *filePath = [[NSBundle bundleForClass:self] pathForResource:fileName ofType:@"json"];;
-    if (!filePath) {
-        NSLog(@"Could not find JSON file: %@", fileName);
-        return NO;
-    }
-    
-    NSError *error;
-    NSData *jsonData = [NSData dataWithContentsOfFile:filePath];
-    if (!jsonData) {
-        NSLog(@"Could not read JSON file: %@", fileName);
-        return NO;
-    }
-    
-    NSDictionary *tenantsDict = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                                options:0
-                                                                  error:&error];
-    if (error) {
-        NSLog(@"Error parsing JSON: %@", error.localizedDescription);
-        return NO;
-    }
-    
-    if (![tenantsDict isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"Invalid JSON structure - root should be a dictionary");
-        return NO;
-    }
-    
-    // Single iteration through all tenants
-    for (NSString *tenantName in tenantsDict) {
-        NSDictionary *tenantConfig = tenantsDict[tenantName];
-        [self registerTenantWithName:tenantName fromConfig:tenantConfig];
-    }
-    return YES;
-}
-
-+ (void)registerTenantWithName:(NSString *)tenantName fromConfig:(NSDictionary *)tenantConfig {
-    if (![tenantConfig isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"Skipping invalid tenant configuration for %@: %@", tenantName, tenantConfig);
-        return;
-    }
-    
-    NSString *tenantId = tenantConfig[@"tenantId"];
-    NSString *releaseConfigTemplateUrl = tenantConfig[@"releaseConfigTemplateUrl"];
-    id logsEndPoints = tenantConfig[@"logsEndPoints"];
-    
-    // Convert NSNull to nil
-    if ([logsEndPoints isKindOfClass:[NSNull class]]) {
-        logsEndPoints = nil;
-    }
-    
-    // Validate required fields
-    if (!tenantId || !releaseConfigTemplateUrl) {
-        NSLog(@"Skipping tenant '%@' - missing required fields (tenantId: %@, releaseConfigTemplateUrl: %@)",
-              tenantName, tenantId, releaseConfigTemplateUrl);
-        return;
-    }
-    
-    [self registerTenantWithName:tenantName
-                        tenantId:tenantId
-        releaseConfigTemplateUrl:releaseConfigTemplateUrl
-                   logsEndPoints:logsEndPoints];
-}
 
 - (instancetype)initWithTenantId:(NSString *)tenantId
             releaseConfigTemplateUrl:(NSString *)releaseConfigTemplateUrl
