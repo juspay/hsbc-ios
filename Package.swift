@@ -22,9 +22,6 @@ let package = Package(
                 .product(name: "HyperSDK", package: "HyperSDK")
             ],
             path: "Sources/HSBCPaymentsSDK",
-            resources: [
-                .copy("../../Fuse.rb")
-            ],
             publicHeadersPath: ".",
             cSettings: [
                 .headerSearchPath("Constants"),
