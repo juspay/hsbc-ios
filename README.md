@@ -39,12 +39,16 @@ Select the app target for **Provide build settings from**
 
 Paste the below shell script:
 
-```ruby
-if [[ "${ACTION}" == "clean" ]]; then
-  cd "${PROJECT_DIR}"
-  echo "Running Fuse.rb script..."
-  ruby "${BUILD_DIR%Build/*}SourcePackages/checkouts/hsbc-ios/Sources/HSBCPaymentsSDK/Fuse.rb"
-fi
+```shell
+HYPER_SDK_DIR="${BUILD_DIR%Build/*}SourcePackages/artifacts/hypersdk-ios/HyperSDK"
+XCFRAMEWORK_DIR="${HYPER_SDK_DIR}/HyperSDK.xcframework"
+FUSE_SCRIPT="${BUILD_DIR%Build/*}SourcePackages/checkouts/hsbc-ios/Sources/HSBCPaymentsSDK/Fuse.rb"
+FUSE_MARKER="${XCFRAMEWORK_DIR}/.fuse_completed"
+VALIDATION_SCRIPT="${HYPER_SDK_DIR}/ValidateHyperSDK.rb"
+
+[ ! -f "$FUSE_MARKER" ] || [ "${ACTION}" == "clean" ] && { cd "${PROJECT_DIR}"; echo "Running Fuse.rb script..."; ruby "$FUSE_SCRIPT"; }
+
+ruby "$VALIDATION_SCRIPT" && touch "$FUSE_MARKER" || exit 1
 ```
 
 This Script will be executed whenever you do **Clean Build Folder**.
