@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name         = "HSBCPaymentsSDK"
-    s.version      = "1.0.2"
+    s.version      = "1.1.1"
     s.summary      = "Hyper visualization and payment processing."
     s.description  = <<-DESC
                     Create payment experiences for user to improve conversion and success rate.
@@ -19,5 +19,5 @@ Pod::Spec.new do |s|
     s.resources    = ['Fuse.rb']
 
     # default dependency
-    s.dependency 'HyperSDK', '2.2.4.3'
+    s.dependency 'HyperSDK', '2.2.6.1'
 end
